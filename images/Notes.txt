@@ -1,0 +1,59 @@
+Features in Training Set: 1500
+Invalid Features in Training set: 0
+Scores: [ 0.99666667  0.99        0.98666667  0.99333333  0.99333333]
+Accuracy: 0.99 (+/- 0.01)
+accuacy score: 0.992
+
+Features in Training Set: 2500
+Invalid Features in Training set: 12
+Scores: [ 0.98393574  0.98995984  0.99196787  0.99195171  0.97384306]
+Accuracy: 0.99 (+/- 0.01)
+accuacy score: 0.986334405145
+
+
+Features in Training Set: 4000
+Invalid Features in Training set: 6
+Scores: [ 0.98748436  0.97496871  0.98998748  0.98748436  0.96992481]
+Accuracy: 0.98 (+/- 0.02)
+accuacy score: 0.981972959439
+
+
+
+[INFO] [1503420226.036450, 986.319000]: Detected 3 objects: ['biscuits', 'soap', 'soap2']
+[ERROR] [1503420226.042852, 986.319000]: bad callback: <function pcl_callback at 0x7f72b96c7758>
+Traceback (most recent call last):
+  File "/opt/ros/kinetic/lib/python2.7/dist-packages/rospy/topics.py", line 750, in _invoke_callback
+    cb(msg)
+  File "/home/robond/catkin_ws/src/RoboND-Perception-Project/pr2_robot/scripts/project_template.py", line 225, in pcl_callback
+    pr2_mover(detected_objects)
+  File "/home/robond/catkin_ws/src/RoboND-Perception-Project/pr2_robot/scripts/project_template.py", line 257, in pr2_mover
+    object_name.group = object_list_param[i]['group']
+AttributeError: 'String' object has no attribute 'group'
+
+
+
+/home/robond/RoboND-Perception-Exercises/python-pcl
+roslaunch pr2_robot pick_place_project.launch
+
+
+/home/robond/catkin_ws/src/RoboND-Perception-Project/pr2_robot/scripts
+rosrun pr2_robot project_template.py
+
+
+
+
+/home/robond/catkin_ws/src
+roslaunch sensor_stick training.launch
+
+
+
+/home/robond/catkin_ws/src/sensor_stick/scripts
+vi capture_features.py
+cp model_3.sav /home/robond/catkin_ws/src/RoboND-Perception-Project/pr2_robot/scripts
+
+
+/home/robond/catkin_ws/src/sensor_stick/src/sensor_stick
+
+
+vi ~/catkin_ws/src/RoboND-Perception-Project/pr2_robot/launch/pick_place_project.launch
+vi ~/catkin_ws/src/RoboND-Perception-Project/pr2_robot/worlds/test1.world
