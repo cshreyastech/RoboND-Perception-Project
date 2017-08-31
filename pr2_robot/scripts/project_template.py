@@ -231,9 +231,9 @@ def pr2_mover(object_list):
 
     # TODO: Initialize variables
     labels = []
-    centroids = [] # to be list of tuples (x, y, z)
+    object_centroids = [] # to be list of tuples (x, y, z)
     test_scene_num = std_msgs.msg.Int32()
-    test_scene_num.data = 2
+    test_scene_num.data = 3
     object_name = std_msgs.msg.String()
     arm_name = std_msgs.msg.String()
     pick_pose = geometry_msgs.msg.Pose()
@@ -249,7 +249,6 @@ def pr2_mover(object_list):
     # TODO: Rotate PR2 in place to capture side tables for the collision map
 
     # TODO: Loop through the pick list
-    i = 0
     for i in range(0, len(object_list_param)):
     # for obj in object_list_param:
 	# Populate the data field
@@ -257,32 +256,31 @@ def pr2_mover(object_list):
 	object_found = False
 
         # TODO: Get the PointCloud for a given object and obtain it's centroid
-	# print('object_list: ', object_list)
-
 	for object in object_list:
 	    if(object_name.data == object.label):
-		# labels.append(object.label)
 		points_arr = ros_to_pcl(object.cloud).to_array()
-		centroids.append(np.mean(points_arr, axis=0)[:3])
+		object_centroid = np.mean(points_arr, axis=0)[:3]
+
 		object_found = True
+		break
 
 	if(object_found):
-	    pick_pose.postion.x = float(centroids[0])
-	    pick_pose.postion.y = float(centroids[1])
-	    pick_pose.postion.z = float(centroids[2])
+	    pick_pose.position.x = np.asscalar(object_centroid[0])
+	    pick_pose.position.y = np.asscalar(object_centroid[1])
+	    pick_pose.position.z = np.asscalar(object_centroid[2])
 
  	    # TODO: Create 'place_pose' for the object
 	    place_pose.position.x = 0.0
 	    place_pose.position.y = 0.0
 	    place_pose.position.z = 0.8
-
-
+	    
 	    # TODO: Assign the arm to be used for pick_place
-	    object_name.group = object_list_param[i]['group']
-	    if(object_name.group == "red"):
+	    object_group = object_list_param[i]['group']
+
+	    if(object_group == "red"):
 		arm_name.data = "left"
 	        place_pose.position.y = 0.76
-	    elif(object_name.group == "green"):
+	    elif(object_group == "green"):
 		arm_name.data = "right"
 	        place_pose.position.y = -0.76
 
@@ -293,6 +291,7 @@ def pr2_mover(object_list):
 	# Wait for 'pick_place_routine' service to come up
 	rospy.wait_for_service('pick_place_routine')
 
+	"""
         try:
             pick_place_routine = rospy.ServiceProxy('pick_place_routine', PickPlace)
 
@@ -303,8 +302,7 @@ def pr2_mover(object_list):
 
         except rospy.ServiceException, e:
             print "Service call failed: %s"%e
-
-	# i += 1
+	"""
     # TODO: Output your request parameters into output yaml file
     yaml_filename = "output_" + str(test_scene_num.data) + ".yaml"
     send_to_yaml(yaml_filename, yaml_dict_list)
@@ -313,7 +311,7 @@ def pr2_mover(object_list):
 if __name__ == '__main__':
 
     # TODO: ROS node initialization
-    rospy.init_node('clustering', anonymous=True)
+    rospy.init_node('clustering', anonymous=False)
 
     # TODO: Create Subscribers
     pcl_sub = rospy.Subscriber("/pr2/world/points", pc2.PointCloud2, pcl_callback, queue_size=1)

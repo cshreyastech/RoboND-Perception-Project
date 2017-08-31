@@ -61,3 +61,4 @@ Training Set 3
 
 #### 7. Conclusion
 All the objects were identified successfully in all seen. It was a very good leaning on the object recognition, but I still have few grey areas in my understanding.
+There were few iterations during which fewer objects were recognized, but they get rectified as the iteration continues. This could be fixed by fine tuning the filters for removing the noise.
